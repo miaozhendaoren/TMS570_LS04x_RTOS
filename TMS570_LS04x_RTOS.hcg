@@ -95,7 +95,7 @@
       </HDRCORE>
       <HDRMPU>
         <NAME>os_mpu_wrappers.h</NAME>
-        <PATH>include\sys_mpu.h</PATH>
+        <PATH>include\os_mpu_wrappers.h</PATH>
       </HDRMPU>
       <HDRPMU>
         <NAME>sys_pmu.h</NAME>
@@ -268,7 +268,9 @@
       <HDRSCI>
         <NAME>sci.h</NAME>
       </HDRSCI>
-      <SRCSCI/>
+      <SRCSCI>
+        <NAME>sci.c</NAME>
+      </SRCSCI>
       <HDRMIBSPI_R>
         <NAME>reg_mibspi.h</NAME>
       </HDRMIBSPI_R>
@@ -296,7 +298,9 @@
       <HDRADC>
         <NAME>adc.h</NAME>
       </HDRADC>
-      <SRCADC/>
+      <SRCADC>
+        <NAME>adc.c</NAME>
+      </SRCADC>
       <HET1ASMHDR>
         <NAME/>
       </HET1ASMHDR>
@@ -517,7 +521,7 @@
         <PATH>include\sci.h</PATH>
       </HDRSCI>
       <SRCSCI>
-        <PATH/>
+        <PATH>source\sci.c</PATH>
       </SRCSCI>
     </FILENAMES>
   </SCI>
@@ -569,7 +573,7 @@
         <PATH>include\adc.h</PATH>
       </HDRADC>
       <SRCADC>
-        <PATH/>
+        <PATH>source\adc.c</PATH>
       </SRCADC>
     </FILENAMES>
   </ADC>
