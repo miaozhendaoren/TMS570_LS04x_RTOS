@@ -1,15 +1,15 @@
 /** @file sys_main.c 
 *   @brief Application main file
 *   @date 9.Sep.2014
-*   @version 00.00.01
+*   @version 04.01.00
+*
+*   This file contains an empty main function,
+*   which can be used for the application.
 */
 
-/* Include Files */
+/* (c) Texas Instruments 2009-2014, All rights reserved. */
 
-#include "sys_common.h"
-#include "system.h"
-
-/* USER CODE BEGIN */
+/* USER CODE BEGIN (0) */
 #include "FreeRTOS.h"
 #include "os_task.h"
 
@@ -74,30 +74,29 @@ static void prvButtonPollTask(void *pvParameters)
 }
 /* USER CODE END */
 
+/* Include Files */
+
+#include "sys_common.h"
+
+/* USER CODE BEGIN (1) */
+/* USER CODE END */
+
 /** @fn void main(void)
 *   @brief Application main function
+*   @note This function is empty by default.
+*
+*   This function is called after startup.
+*   The user can use this function to implement the application.
 */
+
+/* USER CODE BEGIN (2) */
+/* USER CODE END */
 
 void main(void)
 {
-	gioInit();
-	hetInit();
-
-	/* Create Task1 */
-	if (xTaskCreate(vTaskHET, "TaskHET", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTask1Hadle) != pdTRUE)
-	{
-		while(1);
-	}
-
-	/* Create Task2 */
-	if (xTaskCreate(vTaskGIO, "TaskGIO", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTask2Hadle) != pdTRUE)
-	{
-		while(1);
-	}
-
-	xTaskCreate(prvButtonPollTask, "TaskButton", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL);
-
-	vTaskStartScheduler();
-
-	while(1);
+/* USER CODE BEGIN (3) */
+/* USER CODE END */
 }
+
+/* USER CODE BEGIN (4) */
+/* USER CODE END */
