@@ -19,6 +19,8 @@
 #include "het.h"
 #include "sci.h"
 
+volatile boolean pushButton = false;
+
 /* Define task handles. */
 xTaskHandle xTask1Hadle;
 
@@ -44,7 +46,11 @@ void vTaskADC(void *pvParameters)
         adcStartConversion(adcREG1, adcGROUP1);
 
         /* ... wait and read the conversion count */
-        while((adcIsConversionComplete(adcREG1, adcGROUP1)) == 0);
+        while((adcIsConversionComplete(adcREG1, adcGROUP1)) == 0)
+        {
+        	/* blink */
+        	gioToggleBit(gioPORTA, 2);
+        }
         ch_count = adcGetData(adcREG1, adcGROUP1, &adc_data[0]);
 
         ch_count = ch_count;
@@ -52,24 +58,55 @@ void vTaskADC(void *pvParameters)
         /* adc_data[0] -> should have conversions for Group1 channel1 */
         /* adc_data[1] -> should have conversions for Group1 channel2 */
 
-        id = adc_data[0].id;
-        value = adc_data[0].value;
+        if (pushButton)
+        {
+        	id = adc_data[0].id;
+        	value = adc_data[0].value;
 
-        sciDisplayText(scilinREG, &TEXT1[0], TSIZE1); /* send text 1 */
-        sciDisplayData(scilinREG, (uint8*)&id, 4);    /* send data 1 */
-        sciDisplayText(scilinREG, &TEXT2[0], TSIZE2); /* send text 2 */
-        sciDisplayData(scilinREG, (uint8*)&value, 4); /* send data 2 */
+        	sciDisplayText(scilinREG, &TEXT1[0], TSIZE1); /* send text 1 */
+        	sciDisplayData(scilinREG, (uint8*)&id, 4);    /* send data 1 */
+        	sciDisplayText(scilinREG, &TEXT2[0], TSIZE2); /* send text 2 */
+        	sciDisplayData(scilinREG, (uint8*)&value, 4); /* send data 2 */
 
-        id = adc_data[1].id;
-        value = adc_data[1].value;
+        	id = adc_data[1].id;
+        	value = adc_data[1].value;
 
-        sciDisplayText(scilinREG, &TEXT1[0], TSIZE1); /* send text 1 */
-        sciDisplayData(scilinREG, (uint8*)&id, 4);    /* send data 1 */
-        sciDisplayText(scilinREG, &TEXT2[0], TSIZE2); /* send text 2 */
-        sciDisplayData(scilinREG, (uint8*)&value, 4); /* send data 2 */
+        	sciDisplayText(scilinREG, &TEXT1[0], TSIZE1); /* send text 1 */
+        	sciDisplayData(scilinREG, (uint8*)&id, 4);    /* send data 1 */
+        	sciDisplayText(scilinREG, &TEXT2[0], TSIZE2); /* send text 2 */
+        	sciDisplayData(scilinREG, (uint8*)&value, 4); /* send data 2 */
+        }
 
         vTaskDelay(1000);
     }
+}
+
+/* Task2 */
+static void prvButtonPollTask(void *pvParameters)
+{
+	unsigned char ucLastState = pdFALSE, ucState;
+
+	for (;;)
+	{
+		/* Check the button state. */
+		ucState = gioGetBit(gioPORTA, 7);
+
+		if (ucState != 0)
+		{
+			/* The button was pressed. */
+			ucState = pdTRUE;
+		}
+
+		if(ucState != ucLastState)
+		{
+			/* The state has changed. */
+			ucLastState = ucState;
+			/* Toggle state flag. */
+			pushButton = ucState?pushButton:!pushButton;
+		}
+
+		vTaskDelay(10);
+	}
 }
 
 /* Functions */
@@ -154,6 +191,8 @@ void main(void)
 	{
 		while(1);
 	}
+
+	xTaskCreate(prvButtonPollTask, "TaskButton", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL);
 
 	vTaskStartScheduler();
 
